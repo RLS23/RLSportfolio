@@ -1,0 +1,40 @@
+
+backend:
+  name: git-gateway
+  branch: main
+
+media_folder: "uploads"
+public_folder: "/uploads"
+
+collections:
+  - name: "projects"
+    label: "Projects"
+    folder: "content/projects"
+    create: true
+    slug: "{{slug}}"
+    fields:
+      - {label: "Title", name: "title", widget: "string"}
+      - {label: "Type", name: "type", widget: "select", options: ["Commercial","Residential","Industrial"]}
+      - {label: "Year", name: "year", widget: "number"}
+      - {label: "Location", name: "location", widget: "string"}
+      - {label: "Software", name: "software", widget: "list"}
+      - {label: "Images", name: "images", widget: "list", hint: "Upload images to the media library."}
+      - {label: "Video URL (YouTube/Vimeo)", name: "video", widget: "string", required: false}
+      - {label: "Description", name: "description", widget: "text"}
+  - name: "testimonials"
+    label: "Testimonials"
+    folder: "content/testimonials"
+    create: true
+    slug: "{{slug}}"
+    fields:
+      - {label: "Client", name: "client", widget: "string"}
+      - {label: "Quote", name: "quote", widget: "text"}
+  - name: "settings"
+    label: "Settings"
+    files:
+      - label: "Site Settings"
+        name: "site_settings"
+        file: "content/settings/site.json"
+        fields:
+          - {label: "Site Title", name: "title", widget: "string"}
+          - {label: "Tagline", name: "tagline", widget: "string"}

@@ -14,3 +14,6 @@
 .meta{color:var(--muted);font-size:13px}.footer{padding:28px 24px;text-align:center;color:var(--muted)}
 body.dark{--bg:#071021;--card:#081124;--text:#e6eef7;--muted:#98a3ad;--accent:#94a3b8}body.dark .hero{filter:brightness(.85)}
 .fade-up{opacity:0;transform:translateY(10px);animation:fadeUp .6s ease forwards}@keyframes fadeUp{to{opacity:1;transform:none}}@media (max-width:800px){.h1{font-size:28px}.hero{padding:36px 16px}}
+.hero .h1 {
+  color: #ffffff; 
+}

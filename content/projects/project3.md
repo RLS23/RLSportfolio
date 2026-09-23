@@ -1,15 +1,15 @@
 ---
-title: "Bungalow Residence"
+title: "2-Storey Villa"
 type: "Residential"
 year: 2024
-date: "May 2024"
-location: "Pampanga, Philippines"
+date: "June 2024"
+location: "Cavite, Philippines"
 software:
   - "STAAD FOUNDATION"
   - "STAAD PRO"
   - "RCDC"
 images:
-  - src: "/assets/images/project2.jpg"
+  - src: "/assets/images/project3.jpg"
 video: ""
 description: "Analysis and Design using STAAD PRO, RCDC, and STAAD FOUNDATION."
 featured: false

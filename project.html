@@ -1,0 +1,51 @@
+<!doctype html><html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><title>Project - Rame Laurenz</title><link rel="stylesheet" href="style.css"><script defer src="script.js"></script><script src="https://identity.netlify.com/v1/netlify-identity-widget.js"></script><script src="https://cdnjs.cloudflare.com/ajax/libs/js-yaml/4.1.0/js-yaml.min.js"></script><script src="assets/js/cms-data.js"></script></head><body><header class="header"><div class="inner"><div class="logo">Rame Laurenz</div><nav class="nav"><a href="index.html">Home</a><a href="about.html">About</a><a href="projects.html">Projects</a><a href="skills.html">Skills</a><a href="testimonials.html">Testimonials</a><a href="contact.html">Contact</a></nav><span id="auth-box" class="auth-box"></span><button id="theme-toggle" class="theme-toggle">🌙</button></div></header><main class="container"><section class="section fade-up" id="project-detail"><p class="meta">Loading project…</p></section></main><footer class="footer">© 2025 Rame Laurenz</footer>
+<script>
+function escapeHtml(s){ return window.CMSData.escapeHtml(s); }
+
+document.addEventListener('DOMContentLoaded', async () => {
+  const el = document.getElementById('project-detail');
+  const params = new URLSearchParams(window.location.search);
+  const slug = params.get('slug');
+
+  if (!slug) {
+    el.innerHTML = '<p class="meta">No project specified. <a href="projects.html">Back to Projects</a></p>';
+    return;
+  }
+
+  try {
+    const res = await fetch(`content/projects/${slug}.md`, { cache: 'no-store' });
+    if (!res.ok) throw new Error('not found');
+    const raw = await res.text();
+    const p = window.CMSData.parseFrontmatter(raw);
+    p.slug = slug;
+
+    document.title = `${p.title} - Rame Laurenz`;
+
+    const images = (p.images || []).map(i => i.src).filter(Boolean);
+    const gallery = images.length
+      ? `<div class="project-gallery">${images.map(src => `<img src="${escapeHtml(src)}" loading="lazy">`).join('')}</div>`
+      : '';
+
+    const software = (p.software || []).length
+      ? `<p class="meta">Software: ${escapeHtml((p.software || []).join(', '))}</p>`
+      : '';
+
+    const video = p.video
+      ? `<div class="card"><h3>Video</h3><p class="meta"><a href="${escapeHtml(p.video)}" target="_blank" rel="noopener">${escapeHtml(p.video)}</a></p></div>`
+      : '';
+
+    el.innerHTML = `
+      ${images[0] ? `<img src="${escapeHtml(images[0])}" style="width:100%;border-radius:8px">` : ''}
+      <h1>${escapeHtml(p.title)}</h1>
+      <p class="meta">${escapeHtml(window.CMSData.metaLine(p))}</p>
+      ${software}
+      <p>${escapeHtml(p.description)}</p>
+      ${images.length > 1 ? gallery : ''}
+      ${video}
+    `;
+  } catch (e) {
+    el.innerHTML = '<p class="meta">Project not found. <a href="projects.html">Back to Projects</a></p>';
+  }
+});
+</script>
+</body></html>

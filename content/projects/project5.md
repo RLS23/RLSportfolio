@@ -1,15 +1,15 @@
 ---
-title: "Bungalow Residence"
+title: "Balcony Extension"
 type: "Residential"
 year: 2024
-date: "May 2024"
-location: "Pampanga, Philippines"
+date: "July 2024"
+location: "Bulacan, Philippines"
 software:
   - "STAAD FOUNDATION"
   - "STAAD PRO"
   - "RCDC"
 images:
-  - src: "/assets/images/project2.jpg"
+  - src: "/assets/images/project5.jpg"
 video: ""
 description: "Analysis and Design using STAAD PRO, RCDC, and STAAD FOUNDATION."
 featured: false

@@ -1,10 +1,9 @@
-
 backend:
   name: git-gateway
   branch: main
 
-media_folder: "uploads"
-public_folder: "/uploads"
+media_folder: "assets/images"
+public_folder: "/assets/images"
 
 collections:
   - name: "projects"
@@ -12,15 +11,26 @@ collections:
     folder: "content/projects"
     create: true
     slug: "{{slug}}"
+    summary: "{{title}} — {{location}}"
+    sortable_fields: ["title", "year", "commit_date"]
     fields:
       - {label: "Title", name: "title", widget: "string"}
-      - {label: "Type", name: "type", widget: "select", options: ["Commercial","Residential","Industrial"]}
-      - {label: "Year", name: "year", widget: "number"}
+      - label: "Type"
+        name: "type"
+        widget: "select"
+        options: ["Commercial", "Residential", "Industrial", "Church", "Assembly"]
+      - {label: "Year", name: "year", widget: "number", value_type: "int", min: 2000, max: 2100}
+      - {label: "Date (shown on site)", name: "date", widget: "string", required: false, hint: "e.g. \"June 2025\". Leave blank to just show the year."}
       - {label: "Location", name: "location", widget: "string"}
-      - {label: "Software", name: "software", widget: "list"}
-      - {label: "Images", name: "images", widget: "list", hint: "Upload images to the media library."}
+      - {label: "Software Used", name: "software", widget: "list", required: false}
+      - label: "Images"
+        name: "images"
+        widget: "list"
+        hint: "Upload one or more photos. The first image becomes the cover photo shown on the Projects grid."
+        field: {label: "Photo", name: "src", widget: "image"}
       - {label: "Video URL (YouTube/Vimeo)", name: "video", widget: "string", required: false}
       - {label: "Description", name: "description", widget: "text"}
+      - {label: "Feature on homepage", name: "featured", widget: "boolean", default: false, required: false}
   - name: "testimonials"
     label: "Testimonials"
     folder: "content/testimonials"

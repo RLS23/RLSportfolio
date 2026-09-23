@@ -1,15 +1,15 @@
 ---
-title: "Bungalow Residence"
+title: "2-Storey Residential Extension"
 type: "Residential"
-year: 2024
-date: "May 2024"
-location: "Pampanga, Philippines"
+year: 2025
+date: "January 2025"
+location: "Laguna, Philippines"
 software:
   - "STAAD FOUNDATION"
   - "STAAD PRO"
   - "RCDC"
 images:
-  - src: "/assets/images/project2.jpg"
+  - src: "/assets/images/project7.jpg"
 video: ""
 description: "Analysis and Design using STAAD PRO, RCDC, and STAAD FOUNDATION."
 featured: false

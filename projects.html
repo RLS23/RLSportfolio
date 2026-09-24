@@ -1,12 +1,30 @@
-<!doctype html><html lang='en'><head><meta charset='utf-8'><meta name='viewport' content='width=device-width,initial-scale=1'><title>Projects - Rame Laurenz</title><link rel='stylesheet' href='style.css'><script defer src='script.js'></script><script src="https://identity.netlify.com/v1/netlify-identity-widget.js"></script><script src="https://cdnjs.cloudflare.com/ajax/libs/js-yaml/4.1.0/js-yaml.min.js"></script><script src="assets/js/cms-data.js"></script></head><body><header class='header'><div class='inner'><div class='logo'>Rame Laurenz</div><nav class='nav'><a href='index.html'>Home</a><a href='about.html'>About</a><a href='projects.html'>Projects</a><a href='skills.html'>Skills</a><a href='testimonials.html'>Testimonials</a><a href='contact.html'>Contact</a></nav><span id="auth-box" class="auth-box"></span><button id='theme-toggle' class='theme-toggle'>🌙</button></div></header><main class='container'><section class='section fade-up'><h2>Projects</h2><div class='grid' id='projects-grid'><p class='meta'>Loading projects…</p></div></section></main><footer class='footer'>© 2025 Rame Laurenz</footer>
+<!doctype html><html lang='en'><head><meta charset='utf-8'><meta name='viewport' content='width=device-width,initial-scale=1'><title>Projects - Rame Laurenz</title><link rel='stylesheet' href='style.css'><script defer src='script.js'></script><script src="https://identity.netlify.com/v1/netlify-identity-widget.js"></script><script src="https://cdnjs.cloudflare.com/ajax/libs/js-yaml/4.1.0/js-yaml.min.js"></script><script src="assets/js/cms-data.js"></script></head><body><header class='header'><div class='inner'><div class='logo'>Rame Laurenz</div><nav class='nav'><a href='index.html'>Home</a><a href='about.html'>About</a><a href='projects.html'>Projects</a><a href='skills.html'>Skills</a><a href='testimonials.html'>Testimonials</a><a href='contact.html'>Contact</a></nav><span id="auth-box" class="auth-box"></span><button id='theme-toggle' class='theme-toggle'>🌙</button></div></header><main class='container'><section class='section fade-up'><h2>Projects</h2><div class="sort-bar"><label>Sort by year <select id="sort-year"><option value="year-desc">Newest first</option><option value="year-asc">Oldest first</option></select></label><label>Type <select id="filter-type"><option value="all">All types</option><option value="Commercial">Commercial</option><option value="Residential">Residential</option><option value="Industrial">Industrial</option><option value="Church">Church</option><option value="Assembly">Assembly</option></select></label></div><div class='grid' id='projects-grid'><p class='meta'>Loading projects…</p></div></section></main><footer class='footer'>© 2025 Rame Laurenz</footer>
 <script>
+let allProjects = [];
+
+function renderProjects() {
+  const grid = document.getElementById('projects-grid');
+  const sortVal = document.getElementById('sort-year').value;
+  const typeVal = document.getElementById('filter-type').value;
+
+  let list = typeVal === 'all' ? allProjects.slice() : allProjects.filter(p => p.type === typeVal);
+
+  list.sort((a, b) => sortVal === 'year-asc'
+    ? (a.year || 0) - (b.year || 0)
+    : (b.year || 0) - (a.year || 0));
+
+  grid.innerHTML = list.length
+    ? list.map(window.CMSData.cardHtml).join('')
+    : '<p class="meta">No projects match that filter.</p>';
+}
+
 document.addEventListener('DOMContentLoaded', async () => {
   const grid = document.getElementById('projects-grid');
   try {
-    const projects = await window.CMSData.loadAllProjects();
-    grid.innerHTML = projects.length
-      ? projects.map(window.CMSData.cardHtml).join('')
-      : '<p class="meta">No projects yet — check back soon.</p>';
+    allProjects = await window.CMSData.loadAllProjects();
+    renderProjects();
+    document.getElementById('sort-year').addEventListener('change', renderProjects);
+    document.getElementById('filter-type').addEventListener('change', renderProjects);
   } catch (e) {
     grid.innerHTML = '<p class="meta">Could not load projects right now.</p>';
   }

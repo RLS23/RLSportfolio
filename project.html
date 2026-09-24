@@ -21,7 +21,7 @@ document.addEventListener('DOMContentLoaded', async () => {
 
     document.title = `${p.title} - Rame Laurenz`;
 
-    const images = (p.images || []).map(i => i.src).filter(Boolean);
+    const images = (p.images || []).map(window.CMSData.imageSrc).filter(Boolean);
     const gallery = images.length
       ? `<div class="project-gallery">${images.map(src => `<img src="${escapeHtml(src)}" loading="lazy">`).join('')}</div>`
       : '';

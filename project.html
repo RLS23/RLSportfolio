@@ -1,6 +1,41 @@
-<!doctype html><html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><title>Project - Rame Laurenz</title><link rel="stylesheet" href="style.css"><script defer src="script.js"></script><script src="https://identity.netlify.com/v1/netlify-identity-widget.js"></script><script src="https://cdnjs.cloudflare.com/ajax/libs/js-yaml/4.1.0/js-yaml.min.js"></script><script src="assets/js/cms-data.js"></script></head><body><header class="header"><div class="inner"><div class="logo">Rame Laurenz</div><nav class="nav"><a href="index.html">Home</a><a href="about.html">About</a><a href="projects.html">Projects</a><a href="skills.html">Skills</a><a href="testimonials.html">Testimonials</a><a href="contact.html">Contact</a></nav><span id="auth-box" class="auth-box"></span><button id="theme-toggle" class="theme-toggle">🌙</button></div></header><main class="container"><section class="section fade-up" id="project-detail"><p class="meta">Loading project…</p></section></main><footer class="footer">© 2025 Rame Laurenz</footer>
+<!doctype html><html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><title>Project - Rame Laurenz</title><link rel="icon" type="image/svg+xml" href="assets/favicon.svg"><link rel="stylesheet" href="style.css"><script defer src="script.js"></script><script src="https://identity.netlify.com/v1/netlify-identity-widget.js"></script><script src="https://cdnjs.cloudflare.com/ajax/libs/js-yaml/4.1.0/js-yaml.min.js"></script><script src="assets/js/cms-data.js"></script></head><body><header class="header"><div class="inner"><div class="logo">Rame Laurenz</div><nav class="nav"><a href="index.html">Home</a><a href="about.html">About</a><a href="projects.html">Projects</a><a href="skills.html">Skills</a><a href="testimonials.html">Testimonials</a><a href="contact.html">Contact</a></nav><span id="auth-box" class="auth-box"></span><button id="theme-toggle" class="theme-toggle">🌙</button></div></header><main class="container"><section class="section fade-up" id="project-detail"><p class="meta">Loading project…</p></section></main><footer class="footer">© 2025 Rame Laurenz</footer>
+<div class="lightbox" id="lightbox"><button class="lightbox-close" id="lightbox-close" aria-label="Close">&times;</button><button class="lightbox-nav prev" id="lightbox-prev" aria-label="Previous">&#8249;</button><img id="lightbox-img" src="" alt=""><button class="lightbox-nav next" id="lightbox-next" aria-label="Next">&#8250;</button></div>
 <script>
 function escapeHtml(s){ return window.CMSData.escapeHtml(s); }
+
+let galleryImages = [];
+let lightboxIndex = 0;
+
+function openLightbox(i) {
+  lightboxIndex = i;
+  document.getElementById('lightbox-img').src = galleryImages[lightboxIndex];
+  document.getElementById('lightbox').classList.add('open');
+}
+function closeLightbox() {
+  document.getElementById('lightbox').classList.remove('open');
+}
+function stepLightbox(delta) {
+  lightboxIndex = (lightboxIndex + delta + galleryImages.length) % galleryImages.length;
+  document.getElementById('lightbox-img').src = galleryImages[lightboxIndex];
+}
+
+document.getElementById('lightbox-close').addEventListener('click', closeLightbox);
+document.getElementById('lightbox').addEventListener('click', (e) => { if (e.target.id === 'lightbox') closeLightbox(); });
+document.getElementById('lightbox-prev').addEventListener('click', () => stepLightbox(-1));
+document.getElementById('lightbox-next').addEventListener('click', () => stepLightbox(1));
+document.addEventListener('keydown', (e) => {
+  if (!document.getElementById('lightbox').classList.contains('open')) return;
+  if (e.key === 'Escape') closeLightbox();
+  if (e.key === 'ArrowLeft') stepLightbox(-1);
+  if (e.key === 'ArrowRight') stepLightbox(1);
+});
+
+function setMeta(name, content, isProperty) {
+  const attr = isProperty ? 'property' : 'name';
+  let tag = document.querySelector(`meta[${attr}="${name}"]`);
+  if (!tag) { tag = document.createElement('meta'); tag.setAttribute(attr, name); document.head.appendChild(tag); }
+  tag.setAttribute('content', content);
+}
 
 document.addEventListener('DOMContentLoaded', async () => {
   const el = document.getElementById('project-detail');
@@ -22,8 +57,10 @@ document.addEventListener('DOMContentLoaded', async () => {
     document.title = `${p.title} - Rame Laurenz`;
 
     const images = (p.images || []).map(window.CMSData.imageSrc).filter(Boolean);
+    galleryImages = images;
+
     const gallery = images.length
-      ? `<div class="project-gallery">${images.map(src => `<img src="${escapeHtml(src)}" loading="lazy">`).join('')}</div>`
+      ? `<div class="project-gallery">${images.map((src, i) => `<img src="${escapeHtml(src)}" data-i="${i}" loading="lazy">`).join('')}</div>`
       : '';
 
     const software = (p.software || []).length
@@ -34,15 +71,34 @@ document.addEventListener('DOMContentLoaded', async () => {
       ? `<div class="card"><h3>Video</h3><p class="meta"><a href="${escapeHtml(p.video)}" target="_blank" rel="noopener">${escapeHtml(p.video)}</a></p></div>`
       : '';
 
+    const docSrc = window.CMSData.imageSrc(p.document) || (typeof p.document === 'string' ? p.document : '');
+    const doc = docSrc
+      ? `<p class="meta"><a class="cta" href="${escapeHtml(docSrc)}" target="_blank" rel="noopener">Download case study (PDF)</a></p>`
+      : '';
+
     el.innerHTML = `
-      ${images[0] ? `<img src="${escapeHtml(images[0])}" style="width:100%;border-radius:8px">` : ''}
+      ${images[0] ? `<img src="${escapeHtml(images[0])}" data-i="0" class="hero-clickable" style="width:100%;border-radius:8px;cursor:pointer">` : ''}
       <h1>${escapeHtml(p.title)}</h1>
       <p class="meta">${escapeHtml(window.CMSData.metaLine(p))}</p>
       ${software}
       <p>${escapeHtml(p.description)}</p>
       ${images.length > 1 ? gallery : ''}
+      ${doc}
       ${video}
     `;
+
+    el.querySelectorAll('.project-gallery img, .hero-clickable').forEach(img => {
+      img.style.cursor = 'pointer';
+      img.addEventListener('click', () => openLightbox(Number(img.dataset.i)));
+    });
+
+    if (images[0]) {
+      setMeta('description', (p.description || '').slice(0, 160));
+      setMeta('og:title', p.title, true);
+      setMeta('og:description', (p.description || '').slice(0, 160), true);
+      setMeta('og:image', new URL(images[0], window.location.href).href, true);
+      setMeta('og:type', 'article', true);
+    }
   } catch (e) {
     el.innerHTML = '<p class="meta">Project not found. <a href="projects.html">Back to Projects</a></p>';
   }

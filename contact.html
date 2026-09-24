@@ -1,1 +1,28 @@
-<!doctype html><html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><title>Contact - Rame Laurenz</title><link rel="stylesheet" href="style.css"><script defer src="script.js"></script><script src="https://identity.netlify.com/v1/netlify-identity-widget.js"></script></head><body><header class="header"><div class="inner"><div class="logo">Rame Laurenz</div><nav class="nav"><a href="index.html">Home</a><a href="about.html">About</a><a href="projects.html">Projects</a><a href="skills.html">Skills</a><a href="testimonials.html">Testimonials</a><a href="contact.html">Contact</a></nav><span id="auth-box" class="auth-box"></span><button id="theme-toggle" class="theme-toggle">🌙</button></div></header><main class="container"><section class="section fade-up"><h2>Contact</h2><p class="meta">Interested in working together? Send a message or email: <a href="mailto:ramelaurenzsalapare@gmail.com">ramelaurenzsalapare@gmail.com</a></p><form name="contact" method="POST" data-netlify="true"><input type="hidden" name="form-name" value="contact"><label>Name<input type="text" name="name" required></label><label>Email<input type="email" name="email" required></label><label>Message<textarea name="message" required></textarea></label><button class="cta" type="submit">Send Message</button></form></section></main><footer class="footer">© 2025 Rame Laurenz</footer></body></html>
+<!doctype html><html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><title>Contact - Rame Laurenz</title><link rel="stylesheet" href="style.css"><script defer src="script.js"></script><script src="https://identity.netlify.com/v1/netlify-identity-widget.js"></script><link rel="icon" type="image/svg+xml" href="assets/favicon.svg"><meta name="description" content="Get in touch about structural engineering projects, consultations, and collaborations."><meta property="og:title" content="Contact - Rame Laurenz"><meta property="og:description" content="Get in touch about structural engineering projects, consultations, and collaborations."><meta property="og:image" content="assets/images/hero.png"><meta property="og:type" content="website"></head><body><header class="header"><div class="inner"><div class="logo">Rame Laurenz</div><nav class="nav"><a href="index.html">Home</a><a href="about.html">About</a><a href="projects.html">Projects</a><a href="skills.html">Skills</a><a href="testimonials.html">Testimonials</a><a href="contact.html">Contact</a></nav><span id="auth-box" class="auth-box"></span><button id="theme-toggle" class="theme-toggle">🌙</button></div></header><main class="container"><section class="section fade-up"><h2>Contact</h2><p class="meta">Interested in working together? Send a message or email: <a href="mailto:ramelaurenzsalapare@gmail.com">ramelaurenzsalapare@gmail.com</a></p><form name="contact" method="POST" data-netlify="true" id="contact-form"><input type="hidden" name="form-name" value="contact"><label>Name<input type="text" name="name" required></label><label>Email<input type="email" name="email" required></label><label>Message<textarea name="message" required></textarea></label><button class="cta" type="submit" id="contact-submit">Send Message</button><p class="meta" id="contact-status" style="display:none"></p></form></section></main><footer class="footer">© 2025 Rame Laurenz</footer>
+<script>
+document.getElementById('contact-form').addEventListener('submit', function (e) {
+  e.preventDefault();
+  const form = e.target;
+  const status = document.getElementById('contact-status');
+  const btn = document.getElementById('contact-submit');
+  const data = new FormData(form);
+  btn.disabled = true;
+  btn.textContent = 'Sending…';
+
+  fetch('/', { method: 'POST', headers: { 'Content-Type': 'application/x-www-form-urlencoded' }, body: new URLSearchParams(data).toString() })
+    .then(() => {
+      form.reset();
+      status.textContent = "Thanks — your message has been sent. I'll get back to you soon.";
+      status.style.display = 'block';
+      btn.textContent = 'Send Message';
+      btn.disabled = false;
+    })
+    .catch(() => {
+      status.textContent = "Something went wrong sending that — please try emailing me directly instead.";
+      status.style.display = 'block';
+      btn.textContent = 'Send Message';
+      btn.disabled = false;
+    });
+});
+</script>
+</body></html>

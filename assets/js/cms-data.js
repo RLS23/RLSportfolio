@@ -66,8 +66,17 @@
     return projects;
   }
 
+  function imageSrc(entry) {
+    if (!entry) return "";
+    if (typeof entry === "string") return entry;
+    return entry.src || "";
+  }
+
   function coverImage(p) {
-    if (p.images && p.images.length && p.images[0].src) return p.images[0].src;
+    if (p.images && p.images.length) {
+      const src = imageSrc(p.images[0]);
+      if (src) return src;
+    }
     return "assets/images/hero.png";
   }
 
@@ -89,5 +98,5 @@
     </a></div>`;
   }
 
-  window.CMSData = { loadAllProjects, cardHtml, coverImage, metaLine, escapeHtml, parseFrontmatter };
+  window.CMSData = { loadAllProjects, cardHtml, coverImage, metaLine, escapeHtml, parseFrontmatter, imageSrc };
 })(window);

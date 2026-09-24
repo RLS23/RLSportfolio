@@ -1,4 +1,3 @@
-
 document.addEventListener('DOMContentLoaded', ()=>{
   const t = document.getElementById('theme-toggle');
   if(t) t.addEventListener('click', ()=>{
@@ -28,6 +27,10 @@ function initAuthBox(){
       const btn = document.getElementById('auth-login');
       if(btn) btn.addEventListener('click', ()=> netlifyIdentity.open());
     }
+    // The login/signup popup can leave an invisible overlay on top of the
+    // page after a successful login, which blocks every click until it's
+    // explicitly told to close.
+    netlifyIdentity.close();
   }
 
   netlifyIdentity.on('init', render);

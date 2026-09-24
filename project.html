@@ -1,4 +1,4 @@
-<!doctype html><html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><title>Project - Rame Laurenz</title><link rel="icon" type="image/svg+xml" href="assets/favicon.svg"><link rel="stylesheet" href="style.css"><script defer src="script.js"></script><script src="https://identity.netlify.com/v1/netlify-identity-widget.js"></script><script src="https://cdnjs.cloudflare.com/ajax/libs/js-yaml/4.1.0/js-yaml.min.js"></script><script src="assets/js/cms-data.js"></script></head><body><header class="header"><div class="inner"><div class="logo">Rame Laurenz</div><nav class="nav"><a href="index.html">Home</a><a href="about.html">About</a><a href="projects.html">Projects</a><a href="skills.html">Skills</a><a href="testimonials.html">Testimonials</a><a href="contact.html">Contact</a></nav><span id="auth-box" class="auth-box"></span><button id="theme-toggle" class="theme-toggle">🌙</button></div></header><main class="container"><section class="section fade-up" id="project-detail"><p class="meta">Loading project…</p></section></main><footer class="footer">© 2025 Rame Laurenz</footer>
+<!doctype html><html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><title>Project - Rame Laurenz</title><link rel="icon" type="image/svg+xml" href="assets/favicon.svg"><link rel="stylesheet" href="style.css"><script defer src="script.js"></script><script src="https://identity.netlify.com/v1/netlify-identity-widget.js"></script><script src="https://cdnjs.cloudflare.com/ajax/libs/js-yaml/4.1.0/js-yaml.min.js"></script><script src="assets/js/cms-data.js"></script></head><body><header class="header"><div class="inner"><div class="logo">Rame Laurenz</div><nav class="nav" id="site-nav"><a href="index.html">Home</a><a href="about.html">About</a><a href="projects.html">Projects</a><a href="skills.html">Skills</a><a href="testimonials.html">Testimonials</a><a href="contact.html">Contact</a></nav><span id="auth-box" class="auth-box"></span><button id="theme-toggle" class="theme-toggle" aria-label="Toggle dark mode">🌙</button><button id="nav-toggle" class="nav-toggle" aria-label="Open menu" aria-expanded="false">&#9776;</button></div></header><main class="container"><section class="section fade-up" id="project-detail"><p class="meta">Loading project…</p></section></main><footer class="footer"><div class="footer-inner"><nav class="footer-nav"><a href="index.html">Home</a><a href="about.html">About</a><a href="projects.html">Projects</a><a href="skills.html">Skills</a><a href="testimonials.html">Testimonials</a><a href="contact.html">Contact</a></nav><p class="footer-contact"><a href="mailto:ramelaurenzsalapare@gmail.com" aria-label="Email Rame Laurenz"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true"><rect x="2" y="4" width="20" height="16" rx="2"/><path d="m22 7-10 6L2 7"/></svg> ramelaurenzsalapare@gmail.com</a> &middot; Philippines</p><p class="meta">&copy; 2025 Rame Laurenz &mdash; Structural Engineer</p></div></footer>
 <div class="lightbox" id="lightbox"><button class="lightbox-close" id="lightbox-close" aria-label="Close">&times;</button><button class="lightbox-nav prev" id="lightbox-prev" aria-label="Previous">&#8249;</button><img id="lightbox-img" src="" alt=""><button class="lightbox-nav next" id="lightbox-next" aria-label="Next">&#8250;</button></div>
 <script>
 function escapeHtml(s){ return window.CMSData.escapeHtml(s); }
@@ -8,7 +8,9 @@ let lightboxIndex = 0;
 
 function openLightbox(i) {
   lightboxIndex = i;
-  document.getElementById('lightbox-img').src = galleryImages[lightboxIndex];
+  const img = document.getElementById('lightbox-img');
+  img.src = galleryImages[lightboxIndex];
+  img.alt = `Photo ${lightboxIndex + 1} of ${galleryImages.length}`;
   document.getElementById('lightbox').classList.add('open');
 }
 function closeLightbox() {
@@ -16,7 +18,9 @@ function closeLightbox() {
 }
 function stepLightbox(delta) {
   lightboxIndex = (lightboxIndex + delta + galleryImages.length) % galleryImages.length;
-  document.getElementById('lightbox-img').src = galleryImages[lightboxIndex];
+  const img = document.getElementById('lightbox-img');
+  img.src = galleryImages[lightboxIndex];
+  img.alt = `Photo ${lightboxIndex + 1} of ${galleryImages.length}`;
 }
 
 document.getElementById('lightbox-close').addEventListener('click', closeLightbox);
@@ -60,7 +64,7 @@ document.addEventListener('DOMContentLoaded', async () => {
     galleryImages = images;
 
     const gallery = images.length
-      ? `<div class="project-gallery">${images.map((src, i) => `<img src="${escapeHtml(src)}" data-i="${i}" loading="lazy">`).join('')}</div>`
+      ? `<div class="project-gallery">${images.map((src, i) => `<img src="${escapeHtml(src)}" alt="${escapeHtml(p.title)} — photo ${i + 1}" data-i="${i}" loading="lazy">`).join('')}</div>`
       : '';
 
     const software = (p.software || []).length
@@ -77,7 +81,8 @@ document.addEventListener('DOMContentLoaded', async () => {
       : '';
 
     el.innerHTML = `
-      ${images[0] ? `<img src="${escapeHtml(images[0])}" data-i="0" class="hero-clickable" style="width:100%;border-radius:8px;cursor:pointer">` : ''}
+      <p class="breadcrumbs"><a href="index.html">Home</a> / <a href="projects.html">Projects</a> / <span aria-current="page">${escapeHtml(p.title)}</span></p>
+      ${images[0] ? `<img src="${escapeHtml(images[0])}" alt="${escapeHtml(p.title)}" data-i="0" class="hero-clickable" style="width:100%;border-radius:8px;cursor:pointer">` : ''}
       <h1>${escapeHtml(p.title)}</h1>
       <p class="meta">${escapeHtml(window.CMSData.metaLine(p))}</p>
       ${software}

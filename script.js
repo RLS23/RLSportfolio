@@ -9,7 +9,37 @@ document.addEventListener('DOMContentLoaded', ()=>{
   document.querySelectorAll('.fade-up').forEach((el,i)=> setTimeout(()=> el.classList.add('visible'), 120*i));
 
   initAuthBox();
+  initMobileNav();
+  initStickyHeader();
 });
+
+// Hamburger menu: shows/hides the nav links on narrow screens, and closes
+// itself again once a link is tapped or the page is resized back to desktop.
+function initMobileNav(){
+  const toggle = document.getElementById('nav-toggle');
+  const nav = document.getElementById('site-nav');
+  if(!toggle || !nav) return;
+
+  function setOpen(open){
+    nav.classList.toggle('open', open);
+    toggle.setAttribute('aria-expanded', open ? 'true' : 'false');
+  }
+
+  toggle.addEventListener('click', ()=> setOpen(!nav.classList.contains('open')));
+  nav.querySelectorAll('a').forEach(a => a.addEventListener('click', ()=> setOpen(false)));
+  window.addEventListener('resize', ()=>{ if(window.innerWidth > 760) setOpen(false); });
+}
+
+// Gives the sticky header a background once the page has scrolled, so it
+// stays readable over whatever content passes underneath it instead of
+// blending into the hero image or page background.
+function initStickyHeader(){
+  const header = document.querySelector('.header');
+  if(!header) return;
+  function update(){ header.classList.toggle('scrolled', window.scrollY > 24); }
+  window.addEventListener('scroll', update, { passive: true });
+  update();
+}
 
 // Login / logout control, shown in the header on every page.
 // Lets the site owner log in with Netlify Identity and jump straight

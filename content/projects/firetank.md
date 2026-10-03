@@ -9,5 +9,5 @@ software:
 images:
   - /assets/images/firetank.png
 description: Firetank for a laboratory company.
-featured: false
+featured: true
 ---

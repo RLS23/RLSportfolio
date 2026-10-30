@@ -29,6 +29,7 @@ collections:
         hint: "Upload one or more photos. The first image becomes the cover photo shown on the Projects grid."
         field: {label: "Photo", name: "src", widget: "image"}
       - {label: "Video URL (YouTube/Vimeo)", name: "video", widget: "string", required: false}
+      - {label: "Case study PDF (optional)", name: "document", widget: "file", required: false, hint: "Upload a PDF of calculations/drawings if you want a download link on this project's page."}
       - {label: "Description", name: "description", widget: "text"}
       - {label: "Feature on homepage", name: "featured", widget: "boolean", default: false, required: false}
   - name: "testimonials"
@@ -38,7 +39,7 @@ collections:
     slug: "{{slug}}"
     fields:
       - {label: "Client", name: "client", widget: "string"}
-      - {label: "Quote", name: "quote", widget: "text"}
+      - {label: "Quote", name: "quote", widget: "text", required: false, hint: "You can also just write the quote as the entry body below instead."}
   - name: "settings"
     label: "Settings"
     files:
@@ -48,3 +49,5 @@ collections:
         fields:
           - {label: "Site Title", name: "title", widget: "string"}
           - {label: "Tagline", name: "tagline", widget: "string"}
+          - {label: "About Photo", name: "about_photo", widget: "image", required: false}
+          - {label: "About Bio", name: "about_bio", widget: "text", required: false}

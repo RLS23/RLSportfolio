@@ -9,39 +9,36 @@
 
   function parseFrontmatter(raw) {
     const match = raw.match(/^---\s*\n([\s\S]*?)\n---\s*\n?([\s\S]*)$/);
-    if (!match) return {};
+    if (!match) return { body: raw.trim() };
     try {
       const data = window.jsyaml.load(match[1]) || {};
-      if (!data.description && match[2] && match[2].trim()) {
-        data.description = match[2].trim();
-      }
+      data.body = (match[2] || "").trim();
+      if (!data.description && data.body) data.description = data.body;
       return data;
     } catch (e) {
-      console.error("Could not parse project frontmatter", e);
+      console.error("Could not parse frontmatter", e);
       return {};
     }
   }
 
-  async function listProjectFiles() {
+  async function listFiles(folder) {
     try {
       const res = await fetch(
-        `https://api.github.com/repos/${REPO}/contents/content/projects?ref=${BRANCH}`,
+        `https://api.github.com/repos/${REPO}/contents/${folder}?ref=${BRANCH}`,
         { headers: { Accept: "application/vnd.github+json" } }
       );
       if (!res.ok) throw new Error("GitHub API status " + res.status);
       const files = await res.json();
-      return files
-        .filter((f) => f.name.endsWith(".md"))
-        .map((f) => f.name);
+      return files.filter((f) => f.name.endsWith(".md")).map((f) => f.name);
     } catch (e) {
-      console.warn("Falling back to local file listing:", e.message);
-      return null;
+      console.warn(`Could not list ${folder}:`, e.message);
+      return [];
     }
   }
 
-  async function fetchProject(filename) {
+  async function fetchEntry(folder, filename) {
     try {
-      const res = await fetch(`content/projects/${filename}`, { cache: "no-store" });
+      const res = await fetch(`${folder}/${filename}`, { cache: "no-store" });
       if (!res.ok) return null;
       const raw = await res.text();
       const data = parseFrontmatter(raw);
@@ -52,16 +49,29 @@
     }
   }
 
-  async function loadAllProjects() {
-    let files = await listProjectFiles();
-    if (!files) {
-      // Last-resort fallback if GitHub's API is unreachable/rate-limited:
-      // try the slugs already known to exist in this deploy.
-      files = window.KNOWN_PROJECT_SLUGS
-        ? window.KNOWN_PROJECT_SLUGS.map((s) => s + ".md")
-        : [];
+  async function loadAllTestimonials() {
+    const files = await listFiles("content/testimonials");
+    const entries = (await Promise.all(files.map((f) => fetchEntry("content/testimonials", f)))).filter(Boolean);
+    return entries;
+  }
+
+  async function loadSiteSettings() {
+    try {
+      const res = await fetch("content/settings/site.json", { cache: "no-store" });
+      if (!res.ok) return {};
+      return await res.json();
+    } catch (e) {
+      return {};
     }
-    const projects = (await Promise.all(files.map(fetchProject))).filter(Boolean);
+  }
+
+  async function loadAllProjects() {
+    let files = await listFiles("content/projects");
+    if (!files.length && window.KNOWN_PROJECT_SLUGS) {
+      // Last-resort fallback if GitHub's API is unreachable/rate-limited.
+      files = window.KNOWN_PROJECT_SLUGS.map((s) => s + ".md");
+    }
+    const projects = (await Promise.all(files.map((f) => fetchEntry("content/projects", f)))).filter(Boolean);
     projects.sort((a, b) => (b.year || 0) - (a.year || 0) || (b.slug > a.slug ? 1 : -1));
     return projects;
   }
@@ -92,11 +102,14 @@
 
   function cardHtml(p) {
     return `<div class="card"><a href="project.html?slug=${encodeURIComponent(p.slug)}">
-      <img src="${escapeHtml(coverImage(p))}" loading="lazy">
+      <div class="thumb"><img src="${escapeHtml(coverImage(p))}" alt="${escapeHtml(p.title)}" loading="lazy"></div>
       <h3>${escapeHtml(p.title)}</h3>
       <p class="meta">${escapeHtml(metaLine(p))}</p>
     </a></div>`;
   }
 
-  window.CMSData = { loadAllProjects, cardHtml, coverImage, metaLine, escapeHtml, parseFrontmatter, imageSrc };
+  window.CMSData = {
+    loadAllProjects, loadAllTestimonials, loadSiteSettings,
+    cardHtml, coverImage, metaLine, escapeHtml, parseFrontmatter, imageSrc,
+  };
 })(window);

@@ -1,0 +1,49 @@
+# Rebuilds assets/docs/RLS-Portfolio.pdf whenever a project, testimonial or photo
+# changes, so the "Download portfolio (PDF)" button always includes every project.
+# You can also run it by hand: GitHub -> Actions -> "Rebuild portfolio PDF" -> Run workflow.
+name: Rebuild portfolio PDF
+
+on:
+  push:
+    branches: [main]
+    paths:
+      - 'content/**'
+      - 'assets/images/**'
+      - 'assets/js/cms-data.js'
+      - 'portfolio.html'
+      - 'scripts/build-pdf.js'
+  workflow_dispatch:
+
+permissions:
+  contents: write
+
+concurrency:
+  group: portfolio-pdf
+  cancel-in-progress: true
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 20
+      - name: Install Playwright
+        run: |
+          npm install --no-save playwright
+          npx playwright install --with-deps chromium
+      - name: Build PDF
+        run: node scripts/build-pdf.js
+      - name: Commit the new PDF
+        run: |
+          git config user.name "portfolio-bot"
+          git config user.email "portfolio-bot@users.noreply.github.com"
+          git add assets/docs/RLS-Portfolio.pdf
+          if git diff --cached --quiet; then
+            echo "PDF unchanged"
+          else
+            git commit -m "Update portfolio PDF"
+            git pull --rebase origin main
+            git push origin main
+          fi

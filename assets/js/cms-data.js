@@ -87,7 +87,7 @@
       const src = imageSrc(p.images[0]);
       if (src) return src;
     }
-    return "assets/images/hero.png";
+    return "assets/images/logo.png";
   }
 
   function metaLine(p) {
@@ -102,7 +102,7 @@
 
   function cardHtml(p) {
     return `<div class="card"><a href="project.html?slug=${encodeURIComponent(p.slug)}">
-      <div class="thumb"><img src="${escapeHtml(coverImage(p))}" alt="${escapeHtml(p.title)}" loading="lazy"></div>
+      <div class="thumb"><img src="${escapeHtml(coverImage(p))}"${/logo\.png$/.test(coverImage(p)) ? ' class="placeholder"' : ''} alt="${escapeHtml(p.title)}" loading="lazy"></div>
       <h3>${escapeHtml(p.title)}</h3>
       <p class="meta">${escapeHtml(metaLine(p))}</p>
     </a></div>`;

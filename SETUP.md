@@ -60,3 +60,20 @@ git push
   work.
 - `script.js` — adds the Log in / Log out / **+ New project** control in
   the header on every page.
+
+## Portfolio PDF
+
+The "Download portfolio (PDF)" buttons (Home, Projects and About pages) download
+`assets/docs/RLS-Portfolio.pdf`: cover, about, expertise, a project index, **one page
+per project**, testimonials and a closing page.
+
+- The PDF is built from `portfolio.html`, which reads the same `content/` files as
+  the website, so every project is included.
+- `.github/workflows/build-portfolio-pdf.yml` rebuilds the PDF automatically on
+  GitHub whenever a project, testimonial or photo changes (it takes about a minute
+  and Netlify then redeploys). To rebuild by hand: GitHub -> Actions ->
+  "Rebuild portfolio PDF" -> Run workflow.
+- Always-current fallback: open `/portfolio.html` on your site and use
+  "Print / save latest as PDF".
+- To build it on your own computer: `npm install playwright`,
+  `npx playwright install chromium`, then `node scripts/build-pdf.js`.

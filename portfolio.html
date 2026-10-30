@@ -1,0 +1,308 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<meta name="robots" content="noindex">
+<title>Portfolio - Rame Laurenz S. Salapare</title>
+<link rel="icon" type="image/png" href="assets/favicon.png">
+<script src="https://cdnjs.cloudflare.com/ajax/libs/js-yaml/4.1.0/js-yaml.min.js"></script>
+<script src="assets/js/cms-data.js"></script>
+<style>
+/* This page is the source of the downloadable PDF (assets/docs/RLS-Portfolio.pdf).
+   Every .page is one A4-landscape sheet. */
+@font-face{font-family:'Inter';font-weight:400;src:url('assets/fonts/Inter-Regular.woff') format('woff')}
+@font-face{font-family:'Inter';font-weight:600;src:url('assets/fonts/Inter-SemiBold.woff') format('woff')}
+@font-face{font-family:'Inter';font-weight:700;src:url('assets/fonts/Inter-Bold.woff') format('woff')}
+
+:root{--ink:#0c0a09;--muted:#6b6560;--line:#e7e5e4;--panel:#f5f5f4;--mx:16mm}
+@page{size:297mm 210mm;margin:0}
+*{box-sizing:border-box}
+html,body{margin:0;padding:0}
+body{font-family:'Inter',system-ui,-apple-system,'Segoe UI',Arial,sans-serif;color:var(--ink);background:#fff;counter-reset:pg;-webkit-print-color-adjust:exact;print-color-adjust:exact;font-size:10pt;line-height:1.55}
+h1,h2,h3,p{margin:0}
+img{display:block}
+
+.page{position:relative;width:297mm;height:210mm;overflow:hidden;background:#fff;counter-increment:pg;break-after:page;page-break-after:always}
+#doc>.page:last-child{break-after:auto;page-break-after:auto}
+.page-foot{position:absolute;left:var(--mx);right:var(--mx);bottom:8mm;display:flex;justify-content:space-between;font-size:7.5pt;letter-spacing:.06em;text-transform:uppercase;color:var(--muted);border-top:.3mm solid var(--line);padding-top:3mm}
+.page-foot .pn::after{content:counter(pg)}
+.eyebrow{font-size:8pt;font-weight:600;letter-spacing:.16em;text-transform:uppercase;color:var(--muted)}
+.rule{width:14mm;height:.5mm;background:var(--ink);margin:7mm 0}
+
+/* ---- Cover ---- */
+.cover{display:grid;grid-template-columns:1fr 1fr;padding:var(--mx)}
+.cover .left{display:flex;flex-direction:column;justify-content:space-between;padding:6mm 0 4mm}
+.cover h1 span{white-space:nowrap}
+.cover h1{font-size:44pt;line-height:1.02;font-weight:700;letter-spacing:-.035em;margin:9mm 0 5mm}
+.cover .role{font-size:15pt;font-weight:600;letter-spacing:-.01em}
+.cover .tag{font-size:11.5pt;color:var(--muted);max-width:105mm}
+.cover .contact{font-size:9pt;color:var(--muted);line-height:1.8}
+.cover .contact strong{color:var(--ink);font-weight:600}
+.cover .right{display:flex;align-items:center;justify-content:center}
+.cover .right img{height:178mm;width:auto}
+
+/* ---- About / Expertise ---- */
+.about{display:grid;grid-template-columns:105mm 1fr;gap:16mm;padding:var(--mx) var(--mx) 22mm}
+.about .photo{height:100%;border-radius:3mm;overflow:hidden;background:var(--panel)}
+.about .photo img{width:100%;height:100%;object-fit:cover;object-position:50% 25%}
+.about .text{display:flex;flex-direction:column;justify-content:center}
+.about h2{font-size:26pt;font-weight:700;letter-spacing:-.03em;line-height:1.1;margin:4mm 0 6mm}
+.about p.lead{font-size:12pt;line-height:1.65;max-width:130mm}
+.about h3{font-size:8pt;font-weight:600;letter-spacing:.16em;text-transform:uppercase;color:var(--muted);margin:9mm 0 2.5mm}
+.about p.small{font-size:9.5pt;color:var(--muted);max-width:130mm}
+
+.expertise{padding:var(--mx) var(--mx) 22mm;display:flex;flex-direction:column}
+.expertise h2{font-size:26pt;font-weight:700;letter-spacing:-.03em;margin:4mm 0 10mm}
+.cols3{display:grid;grid-template-columns:repeat(3,1fr);gap:10mm}
+.col{border-top:.4mm solid var(--ink);padding-top:4mm}
+.col h3{font-size:12pt;font-weight:600;margin-bottom:2.5mm}
+.col p{font-size:9.5pt;color:var(--muted)}
+.expertise .why{margin-top:auto}
+.stats{display:flex;gap:16mm;margin:0 0 12mm}
+.stat b{display:block;font-size:28pt;font-weight:700;letter-spacing:-.03em;line-height:1}
+.stat span{font-size:8pt;letter-spacing:.12em;text-transform:uppercase;color:var(--muted)}
+
+/* ---- Project index ---- */
+.index{padding:var(--mx) var(--mx) 22mm}
+.index h2{font-size:26pt;font-weight:700;letter-spacing:-.03em;margin:4mm 0 8mm}
+.index .grid2{display:grid;grid-template-columns:1fr 1fr;gap:0 14mm}
+.row{display:grid;grid-template-columns:9mm 1fr auto;gap:3mm;align-items:baseline;padding:2.6mm 0;border-bottom:.3mm solid var(--line)}
+.row .n{font-size:8pt;color:var(--muted);font-variant-numeric:tabular-nums}
+.row .t{font-size:9.5pt;font-weight:600;line-height:1.3}
+.row .m{font-size:8pt;color:var(--muted);margin-top:.6mm}
+.row .y{font-size:8pt;color:var(--muted);font-variant-numeric:tabular-nums}
+
+/* ---- Project page ---- */
+.project{display:grid;grid-template-columns:1.6fr 1fr;gap:14mm;padding:var(--mx) var(--mx) 22mm}
+.media{display:flex;flex-direction:column;gap:4mm;min-height:0}
+.main-img{flex:1;min-height:0;background:var(--panel);border-radius:3mm;display:flex;align-items:center;justify-content:center;overflow:hidden;padding:4mm}
+.main-img img{width:100%;height:100%;object-fit:contain;border-radius:1.5mm}
+.thumbs{display:flex;gap:4mm;height:30mm}
+.thumbs div{flex:1;background:var(--panel);border-radius:2mm;display:flex;align-items:center;justify-content:center;padding:2mm;overflow:hidden}
+.thumbs img{width:100%;height:100%;object-fit:contain}
+.main-img.no-photo img{width:auto;height:40mm;opacity:.5}
+.info{display:flex;flex-direction:column;min-height:0;padding-top:2mm}
+.info h2{font-size:25pt;font-weight:700;letter-spacing:-.03em;line-height:1.12;margin:4mm 0 7mm}
+.info h2.long{font-size:19pt}
+.facts{border-top:.3mm solid var(--line)}
+.fact{display:grid;grid-template-columns:24mm 1fr;padding:3mm 0;border-bottom:.3mm solid var(--line);font-size:10pt}
+.fact dt{color:var(--muted);font-size:8pt;letter-spacing:.1em;text-transform:uppercase;padding-top:.5mm}
+.fact dd{margin:0;font-weight:600}
+.facts{margin:0}
+.chips{display:flex;flex-wrap:wrap;gap:1.6mm}
+.chip{font-size:8.5pt;font-weight:600;border:.3mm solid var(--ink);border-radius:5mm;padding:.6mm 2.8mm}
+.desc{font-size:11pt;line-height:1.65;margin-top:8mm;color:#2b2623}
+.note{font-size:8pt;color:var(--muted);margin-top:4mm;word-break:break-all}
+
+/* ---- Testimonials / Contact ---- */
+.quotes{padding:var(--mx) var(--mx) 22mm}
+.quotes h2{font-size:26pt;font-weight:700;letter-spacing:-.03em;margin:4mm 0 10mm}
+.qgrid{display:grid;grid-template-columns:1fr 1fr;gap:10mm 14mm}
+.q{border-top:.4mm solid var(--ink);padding-top:5mm}
+.q p{font-size:17pt;line-height:1.55;letter-spacing:-.01em}
+.q cite{display:block;margin-top:4mm;font-style:normal;font-size:8.5pt;color:var(--muted);letter-spacing:.08em;text-transform:uppercase}
+.closing{display:flex;flex-direction:column;align-items:center;justify-content:center;text-align:center;gap:6mm;padding:var(--mx)}
+.closing img{height:46mm;width:auto}
+.closing h2{font-size:34pt;font-weight:700;letter-spacing:-.035em;line-height:1.05}
+.closing .lines{font-size:11pt;line-height:1.9}
+.closing .lines span{color:var(--muted)}
+
+/* ---- On-screen preview (not used for the PDF) ---- */
+.toolbar{display:none}
+@media screen{
+  body{background:#d6d3d1}
+  .toolbar{display:flex;gap:10px;align-items:center;justify-content:center;padding:14px;position:sticky;top:0;z-index:10;background:#fafaf9;border-bottom:1px solid var(--line);font-size:14px}
+  .toolbar a{color:var(--ink);text-decoration:none;font-weight:600;border:1px solid var(--ink);border-radius:999px;padding:7px 16px}
+  .toolbar a.solid{background:var(--ink);color:#fff}
+  #doc{display:flex;flex-direction:column;align-items:center;gap:18px;padding:18px 0}
+  .page{box-shadow:0 6px 24px rgba(0,0,0,.18);zoom:var(--z,1)}
+}
+@media print{.toolbar{display:none!important}}
+</style>
+</head>
+<body>
+<div class="toolbar"><a href="index.html">&larr; Back to site</a><a class="solid" href="assets/docs/RLS-Portfolio.pdf" download>Download PDF</a><a href="#" onclick="window.print();return false">Print / save latest as PDF</a></div>
+<div id="doc"></div>
+
+<script>
+(function () {
+  const esc = window.CMSData.escapeHtml;
+  const SITE = 'rlsportfolio.netlify.app';
+  const EMAIL = 'ramelaurenzsalapare@gmail.com';
+  const MONTHS = ['january','february','march','april','may','june','july','august','september','october','november','december'];
+
+  // Content that lives in the site's HTML pages rather than the CMS.
+  const FALLBACK = {
+    name: 'Rame Laurenz S. Salapare',
+    tagline: 'Innovating structures for a resilient world',
+    bio: 'Licensed Structural Engineer in the Philippines with experience in residential, commercial, and industrial projects. Passionate about resilient design and practical solutions.',
+    approach: 'I blend analytical rigour with constructability — using modern software and pragmatic design choices.',
+    software: 'MIDAS GEN, MIDAS NGEN, Design+, STAAD, STAAD Foundation, ETABS, SAFE, RAM Connection, IDEA Statica, AutoCAD',
+    photo: 'assets/images/aboutme.JPG',
+  };
+  const SKILLS = [
+    ['Analysis', 'STAAD, ETABS, Midas Ngen, Midas Gen, Seismobuild, RAM Connection, Idea Statica, Staad Foundation, SAFE, RCDC'],
+    ['Design', 'ACI, ASCE, NSCP'],
+    ['BIM & Drafting', 'Revit, AutoCAD, Sketch Up'],
+  ];
+  const WHY = [
+    ['International Codes', 'Familiar with NSCP, ACI, Eurocode and international best-practices.'],
+    ['Efficient Designs', 'Optimization for cost and constructability.'],
+    ['Clear Documentation', 'Shop drawings, calculations, and BIM coordination.'],
+  ];
+
+  function dateKey(p) {
+    const text = String(p.date || '').toLowerCase();
+    const m = MONTHS.findIndex(mm => text.indexOf(mm) === 0);
+    return (Number(p.year) || 0) * 100 + (m < 0 ? 0 : m + 1);
+  }
+  function slugNum(p) { const m = /(\d+)/.exec(p.slug || ''); return m ? Number(m[1]) : 0; }
+  function pad2(n) { return n < 10 ? '0' + n : String(n); }
+  function footer(label) {
+    return '<div class="page-foot"><span>Rame Laurenz S. Salapare — Portfolio</span><span>' + esc(label || '') + '</span><span class="pn"></span></div>';
+  }
+  function imgs(p) { return (p.images || []).map(window.CMSData.imageSrc).filter(Boolean); }
+
+  function nameLines(name) {
+    const w = String(name).trim().split(/\s+/);
+    if (w.length < 3) return esc(w.join(' '));
+    return '<span>' + esc(w.slice(0, 2).join(' ')) + '</span><br><span>' + esc(w.slice(2).join(' ')) + '</span>';
+  }
+
+  function coverPage(s, projects) {
+    const types = Array.from(new Set(projects.map(p => p.type).filter(Boolean)));
+    return '<section class="page cover"><div class="left"><div>' +
+      '<div class="eyebrow">Portfolio · ' + new Date().getFullYear() + '</div>' +
+      '<h1>' + nameLines(s.title || FALLBACK.name) + '</h1>' +
+      '<div class="role">Structural Engineer</div><div class="rule"></div>' +
+      '<p class="tag">' + esc(s.tagline || FALLBACK.tagline) + '</p></div>' +
+      '<div class="contact"><strong>' + projects.length + ' projects</strong> · ' + esc(types.join(', ')) + '<br>' +
+      esc(EMAIL) + '<br>' + esc(SITE) + ' · Philippines</div></div>' +
+      '<div class="right"><img src="assets/images/logo.png" alt=""></div></section>';
+  }
+
+  function aboutPage(s) {
+    const bio = s.about_bio || FALLBACK.bio;
+    const photo = window.CMSData.imageSrc(s.about_photo) || s.about_photo || FALLBACK.photo;
+    return '<section class="page about"><div class="photo"><img src="' + esc(photo) + '" alt=""></div><div class="text">' +
+      '<div class="eyebrow">About</div><h2>Structures designed to last,<br>built to be practical.</h2>' +
+      '<p class="lead">' + esc(bio) + '</p>' +
+      '<h3>Approach</h3><p class="small">' + esc(FALLBACK.approach) + '</p>' +
+      '<h3>Software</h3><p class="small">' + esc(FALLBACK.software) + '</p></div>' + footer('About') + '</section>';
+  }
+
+  function expertisePage(projects) {
+    const years = projects.map(p => Number(p.year)).filter(Boolean);
+    const span = years.length ? Math.max.apply(null, years) - Math.min.apply(null, years) + 1 : 0;
+    const types = new Set(projects.map(p => p.type).filter(Boolean)).size;
+    return '<section class="page expertise"><div class="eyebrow">Expertise</div><h2>Skills &amp; software</h2>' +
+      '<div class="stats"><div class="stat"><b>' + projects.length + '</b><span>Projects</span></div>' +
+      '<div class="stat"><b>' + types + '</b><span>Structure types</span></div>' +
+      (span ? '<div class="stat"><b>' + span + '</b><span>Years of work shown</span></div>' : '') + '</div>' +
+      '<div class="cols3">' + SKILLS.map(c => '<div class="col"><h3>' + esc(c[0]) + '</h3><p>' + esc(c[1]) + '</p></div>').join('') + '</div>' +
+      '<div class="why"><div class="eyebrow" style="margin-bottom:5mm">Why work with me</div><div class="cols3">' +
+      WHY.map(c => '<div class="col"><h3>' + esc(c[0]) + '</h3><p>' + esc(c[1]) + '</p></div>').join('') + '</div></div>' +
+      footer('Expertise') + '</section>';
+  }
+
+  function indexPages(projects) {
+    const PER_PAGE = 14, out = [];
+    for (let i = 0; i < projects.length; i += PER_PAGE) {
+      const chunk = projects.slice(i, i + PER_PAGE), half = Math.ceil(chunk.length / 2);
+      const row = (p, k) => '<div class="row"><span class="n">' + pad2(i + k + 1) + '</span><div><div class="t">' + esc(p.title) +
+        '</div><div class="m">' + esc([p.type, p.location].filter(Boolean).join(' — ')) + '</div></div><span class="y">' + esc(p.date || p.year || '') + '</span></div>';
+      const col = (items, offset) => '<div>' + items.map((p, k) => row(p, offset + k)).join('') + '</div>';
+      out.push('<section class="page index"><div class="eyebrow">Overview</div><h2>' +
+        (i === 0 ? 'Projects' : 'Projects (continued)') + '</h2><div class="grid2">' +
+        col(chunk.slice(0, half), 0) + col(chunk.slice(half), half) + '</div>' + footer('Project index') + '</section>');
+    }
+    return out;
+  }
+
+  function projectPage(p, i, total) {
+    const list = imgs(p), extra = list.slice(1, 4);
+    const media = list.length
+      ? '<div class="main-img"><img src="' + esc(list[0]) + '" alt=""></div>' +
+        (extra.length ? '<div class="thumbs">' + extra.map(s => '<div><img src="' + esc(s) + '" alt=""></div>').join('') + '</div>' : '')
+      : '<div class="main-img no-photo"><img src="assets/images/logo.png" alt=""></div>';
+    const sw = (p.software || []).length
+      ? '<div class="fact"><dt>Software</dt><dd><div class="chips">' + p.software.map(x => '<span class="chip">' + esc(x) + '</span>').join('') + '</div></dd></div>' : '';
+    const doc = window.CMSData.imageSrc(p.document) || (typeof p.document === 'string' ? p.document : '');
+    return '<section class="page project"><div class="media">' + media + '</div><div class="info">' +
+      '<div class="eyebrow">' + pad2(i + 1) + ' / ' + pad2(total) + (p.type ? ' · ' + esc(p.type) : '') + '</div>' +
+      '<h2' + (String(p.title || '').length > 42 ? ' class="long"' : '') + '>' + esc(p.title) + '</h2>' +
+      '<dl class="facts">' +
+      (p.location ? '<div class="fact"><dt>Location</dt><dd>' + esc(p.location) + '</dd></div>' : '') +
+      (p.date || p.year ? '<div class="fact"><dt>Date</dt><dd>' + esc(p.date || p.year) + '</dd></div>' : '') +
+      sw + '</dl>' +
+      (p.description ? '<p class="desc">' + esc(p.description) + '</p>' : '') +
+      (p.video ? '<p class="note">Video: ' + esc(p.video) + '</p>' : '') +
+      (doc ? '<p class="note">Case study: ' + esc(SITE + '/' + String(doc).replace(/^\//, '')) + '</p>' : '') +
+      '</div>' + footer(p.type || 'Project') + '</section>';
+  }
+
+  function quotesPage(items) {
+    return '<section class="page quotes"><div class="eyebrow">Testimonials</div><h2>Kind words</h2><div class="qgrid">' +
+      items.map(t => '<div class="q"><p>“' + esc(t.quote || t.body) + '”</p><cite>' + esc(t.client) + '</cite></div>').join('') +
+      '</div>' + footer('Testimonials') + '</section>';
+  }
+
+  function closingPage() {
+    return '<section class="page closing"><img src="assets/images/logo.png" alt=""><h2>Let’s build something<br>resilient together.</h2>' +
+      '<div class="lines">' + esc(EMAIL) + '<br><span>' + esc(SITE) + ' · Philippines</span></div></section>';
+  }
+
+  // Large photos are shrunk before printing so the PDF stays small enough to email.
+  async function shrink(img) {
+    try {
+      await img.decode();
+      const max = 1600;
+      if (img.naturalWidth <= max) return;
+      const c = document.createElement('canvas');
+      c.width = max; c.height = Math.round(img.naturalHeight * max / img.naturalWidth);
+      c.getContext('2d').drawImage(img, 0, 0, c.width, c.height);
+      img.src = c.toDataURL('image/jpeg', 0.85);
+      await img.decode();
+    } catch (e) { /* keep the original if anything goes wrong */ }
+  }
+
+  function fitToScreen() {
+    if (!window.matchMedia('screen').matches) return;
+    const z = Math.min(1, (window.innerWidth - 24) / 1123);
+    document.documentElement.style.setProperty('--z', z.toFixed(3));
+  }
+
+  async function build() {
+    const [loaded, testimonials, settings] = await Promise.all([
+      window.CMSData.loadAllProjects(), window.CMSData.loadAllTestimonials(), window.CMSData.loadSiteSettings(),
+    ]);
+    const projects = loaded.slice().sort((a, b) => dateKey(b) - dateKey(a) || slugNum(b) - slugNum(a));
+
+    const pages = [coverPage(settings, projects), aboutPage(settings), expertisePage(projects)]
+      .concat(indexPages(projects))
+      .concat(projects.map((p, i) => projectPage(p, i, projects.length)));
+    if (testimonials.length) pages.push(quotesPage(testimonials));
+    pages.push(closingPage());
+
+    document.getElementById('doc').innerHTML = pages.join('');
+    fitToScreen();
+    window.addEventListener('resize', fitToScreen);
+
+    const all = Array.from(document.images);
+    await Promise.all(all.map(shrink));
+    if (document.fonts && document.fonts.ready) await document.fonts.ready;
+    window.__portfolioPages = pages.length;
+    window.__portfolioProjects = projects.length;
+    window.__portfolioReady = true;
+  }
+
+  build().catch(err => {
+    document.getElementById('doc').innerHTML = '<p style="padding:24px">Could not build the portfolio: ' + esc(err.message) + '</p>';
+    window.__portfolioError = String(err);
+    window.__portfolioReady = true;
+  });
+})();
+</script>
+</body>
+</html>
